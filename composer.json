@@ -18,7 +18,9 @@
         }
     ],
     "require": {
+        "agungsugiarto/codeigniter4-authentication": "dev-master",
         "codeigniter4/framework": "^4.1",
+        "lcobucci/jwt": "^4.1",
         "php": "^7.3 || ^8.0"
     },
     "require-dev": {
