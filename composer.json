@@ -11,6 +11,12 @@
     "license": "MIT",
     "authors": [
         {
+            "name": "Sean Tymon",
+            "email": "tymon148@gmail.com",
+            "homepage": "https://tymon.xyz",
+            "role": "Developer"
+        },
+        {
             "name": "Agung Sugiarto",
             "email": "me.agungsugiarto@gmail.com",
             "homepage": "https://agungsugiarto.github.io",
@@ -18,10 +24,14 @@
         }
     ],
     "require": {
-        "agungsugiarto/codeigniter4-authentication": "dev-master",
+        "agungsugiarto/codeigniter4-authentication": "^1.x-dev",
         "codeigniter4/framework": "^4.1",
-        "lcobucci/jwt": "^4.1",
-        "php": "^7.3 || ^8.0"
+        "php": "^7.3|^8.0",
+        "firebase/php-jwt": "^5.2",
+        "lcobucci/jwt": "<3.4",
+        "namshi/jose": "^7.0",
+        "nesbot/carbon": "^2.0",
+        "tightenco/collect": "^8.19"
     },
     "require-dev": {
         "fakerphp/faker": "^1.13",
