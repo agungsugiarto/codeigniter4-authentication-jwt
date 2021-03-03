@@ -12,7 +12,7 @@
 
 namespace Fluent\JWTAuth\Contracts;
 
-interface Validator
+interface ValidatorInterface
 {
     /**
      * Perform some checks on the value.

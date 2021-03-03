@@ -12,7 +12,7 @@
 
 namespace Fluent\JWTAuth\Support;
 
-trait RefreshFlow
+trait RefreshFlowTrait
 {
     /**
      * The refresh flow flag.
@@ -24,12 +24,12 @@ trait RefreshFlow
     /**
      * Set the refresh flow flag.
      *
-     * @param  bool  $refreshFlow
+     * @param  bool  $RefreshFlowTrait
      * @return $this
      */
     public function setRefreshFlow($refreshFlow = true)
     {
-        $this->refreshFlow = $refreshFlow;
+        $this->refreshFlowTrait = $refreshFlow;
 
         return $this;
     }

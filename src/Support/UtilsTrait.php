@@ -14,7 +14,7 @@ namespace Fluent\JWTAuth\Support;
 
 use Carbon\Carbon;
 
-class Utils
+class UtilsTrait
 {
     /**
      * Get the Carbon instance for the current time.

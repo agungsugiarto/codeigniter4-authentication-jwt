@@ -12,7 +12,7 @@
 
 namespace Fluent\JWTAuth\Contracts;
 
-interface JWTSubject
+interface JWTSubjectInterface
 {
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.

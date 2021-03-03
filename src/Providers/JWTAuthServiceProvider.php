@@ -2,6 +2,7 @@
 
 namespace Fluent\JWTAuth\Providers;
 
+use CodeIgniter\Config\Factories;
 use CodeIgniter\Config\Services;
 use Fluent\Auth\AbstractServiceProvider;
 use Fluent\Auth\Facades\Auth;
@@ -11,7 +12,7 @@ use Fluent\JWTAuth\Factory;
 use Fluent\JWTAuth\Http\Parser\AuthHeaders;
 use Fluent\JWTAuth\Http\Parser\Cookies;
 use Fluent\JWTAuth\Http\Parser\InputSource;
-use Fluent\JWTAuth\Http\Parser\Parser as ParserParser;
+use Fluent\JWTAuth\Http\Parser\Parser as HttpParser;
 use Fluent\JWTAuth\Http\Parser\QueryString;
 use Fluent\JWTAuth\JWT;
 use Fluent\JWTAuth\JWTGuard;
@@ -31,43 +32,54 @@ class JWTAuthServiceProvider extends AbstractServiceProvider
     {
         Auth::extend('jwt', function ($auth, $name, array $config) {
             return new JWTGuard(
-                new JWT(
-                    new Manager(
+                (new JWT(
+                    (new Manager(
                         new Lcobucci(
                             new Builder(),
                             new Parser(),
-                            'HUDq86iixx97nJZopsu3V5vHdzswPw29qC8PwylruFKJI5paAY5ogqiTBCnIUYKm',
-                            'HS256',
-                            []
+                            static::config('secret'),
+                            static::config('algo'),
+                            static::config('keys')
                         ),
-                        new Blacklist(new Illuminate(Services::cache())),
+                        (new Blacklist(new Illuminate(Services::cache())))
+                            ->setGracePeriod(static::config('blacklist_grace_period'))
+                            ->setRefreshTTL(static::config('refresh_ttl')),
                         new Factory(
-                            new ClaimsFactory(Services::request()),
+                            (new ClaimsFactory(Services::request()))
+                                ->setTTL(static::config('ttl'))
+                                ->setLeeway(static::config('leeway')),
                             (new PayloadValidator())
-                                ->setRefreshTTL(20160)
-                                ->setRequiredClaims([
-                                    'iss',
-                                    'iat',
-                                    'exp',
-                                    'nbf',
-                                    'sub',
-                                    'jti',
-                                ])
+                                ->setRefreshTTL(static::config('refresh_ttl'))
+                                ->setRequiredClaims(static::config('required_claims'))
                         )
-                    ),
-                    new ParserParser(
+                    ))
+                    ->setBlacklistEnabled(static::config('blacklist_enabled'))
+                    ->setPersistentClaims(static::config('persistent_claims')),
+                    new HttpParser(
                         Services::request(),
                         [
                             new AuthHeaders(),
                             new QueryString(),
                             new InputSource(),
-                            new Cookies(false),
+                            new Cookies(static::config('decrypt_cookies')),
                         ]
                     )
-                ),
+                ))
+                ->lockSubject(static::config('lock_subject')),
                 Auth::createUserProvider($config['provider']),
                 Services::request()
             );
         });
+    }
+
+    /**
+     * Helper to get the config values.
+     *
+     * @param string $key
+     * @return mixed
+     */
+    protected static function config($key)
+    {
+        return Factories::config('JWT', ['getShared' => true])->$key;
     }
 }

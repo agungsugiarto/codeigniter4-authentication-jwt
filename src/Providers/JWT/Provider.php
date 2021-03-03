@@ -13,6 +13,7 @@
 namespace Fluent\JWTAuth\Providers\JWT;
 
 use Fluent\JWTAuth\Exceptions\JWTException;
+use Lcobucci\JWT\Signer\Key;
 use Tightenco\Collect\Support\Arr;
 
 abstract class Provider
@@ -157,7 +158,7 @@ abstract class Provider
     /**
      * Get the key used to sign the tokens.
      *
-     * @return resource|string
+     * @return Key|null
      */
     protected function getSigningKey()
     {

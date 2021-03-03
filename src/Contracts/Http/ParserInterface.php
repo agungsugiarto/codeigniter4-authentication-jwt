@@ -10,19 +10,16 @@
  * file that was distributed with this source code.
  */
 
-namespace Fluent\JWTAuth\Contracts\Providers;
+namespace Fluent\JWTAuth\Contracts\Http;
 
-interface JWT
+use CodeIgniter\Http\Request;
+
+interface ParserInterface
 {
     /**
-     * @param array $payload
-     * @return string
+     * Parse the request.
+     *
+     * @return null|string
      */
-    public function encode(array $payload);
-
-    /**
-     * @param  string  $token
-     * @return array
-     */
-    public function decode($token);
+    public function parse(Request $request);
 }

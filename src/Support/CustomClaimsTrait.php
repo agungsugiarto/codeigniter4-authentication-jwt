@@ -12,7 +12,7 @@
 
 namespace Fluent\JWTAuth\Support;
 
-trait CustomClaims
+trait CustomClaimsTrait
 {
     /**
      * Custom claims.
@@ -24,7 +24,7 @@ trait CustomClaims
     /**
      * Set the custom claims.
      *
-     * @param  array  $customClaims
+     * @param  array  $CustomClaims
      * @return $this
      */
     public function customClaims(array $customClaims)
@@ -37,12 +37,12 @@ trait CustomClaims
     /**
      * Alias to set the custom claims.
      *
-     * @param  array  $customClaims
+     * @param  array  $CustomClaims
      * @return $this
      */
-    public function claims(array $customClaims)
+    public function claims(array $CustomClaims)
     {
-        return $this->customClaims($customClaims);
+        return $this->customClaims($CustomClaims);
     }
 
     /**

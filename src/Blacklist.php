@@ -14,7 +14,7 @@ namespace Fluent\JWTAuth;
 
 use Fluent\JWTAuth\Contracts\Providers\Storage;
 use Fluent\JWTAuth\Payload;
-use Fluent\JWTAuth\Support\Utils;
+use Fluent\JWTAuth\Support\UtilsTrait;
 
 use function value;
 
@@ -90,8 +90,8 @@ class Blacklist
      */
     protected function getMinutesUntilExpired(Payload $payload)
     {
-        $exp = Utils::timestamp($payload['exp']);
-        $iat = Utils::timestamp($payload['iat']);
+        $exp = UtilsTrait::timestamp($payload['exp']);
+        $iat = UtilsTrait::timestamp($payload['iat']);
 
         // get the latter of the two expiration dates and find
         // the number of minutes until the expiration date,
@@ -126,7 +126,7 @@ class Blacklist
         }
 
         // check whether the expiry + grace has past
-        return ! empty($val) && ! Utils::isFuture($val['valid_until']);
+        return ! empty($val) && ! UtilsTrait::isFuture($val['valid_until']);
     }
 
     /**
@@ -159,7 +159,7 @@ class Blacklist
      */
     protected function getGraceTimestamp()
     {
-        return Utils::now()->addSeconds($this->gracePeriod)->getTimestamp();
+        return UtilsTrait::now()->addSeconds($this->gracePeriod)->getTimestamp();
     }
 
     /**

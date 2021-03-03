@@ -20,7 +20,7 @@ use function count;
 use function explode;
 use function implode;
 
-class TokenValidator extends Validator
+class TokenValidator extends AbstractValidator
 {
     /**
      * Check the structure of the token.

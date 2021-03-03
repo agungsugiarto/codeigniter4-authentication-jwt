@@ -16,6 +16,7 @@ use BadMethodCallException;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\Http\RequestInterfaceInterface;
 use Exception;
+use Fluent\Auth\Contracts\AuthenticationInterface;
 use Fluent\Auth\Contracts\AuthenticatorInterface;
 use Fluent\Auth\Contracts\UserProviderInterface;
 use Fluent\Auth\Traits\GuardHelperTrait;
@@ -28,7 +29,7 @@ use Fluent\JWTAuth\Token;
 use function call_user_func_array;
 use function method_exists;
 
-class JWTGuard
+class JWTGuard implements AuthenticationInterface
 {
     use GuardHelperTrait;
 
@@ -95,18 +96,31 @@ class JWTGuard
      */
     public function validate(array $credentials): bool
     {
-        return $this->attempt($credentials, false);
+        $this->lastAttempted = $user = $this->provider->findByCredentials($credentials);
+
+        return $this->hasValidCredentials($user, $credentials);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function attempt(array $credentials = [], $login = true)
+    public function attempt(array $credentials, bool $remember = true)
     {
         $this->lastAttempted = $user = $this->provider->findByCredentials($credentials);
 
         if ($this->hasValidCredentials($user, $credentials)) {
-            return $login ? $this->login($user) : true;
+            $this->login($user, $remember);
+
+            // We can return JWT if pass second argument to true
+            // otherwise will return boolean.
+            if ($remember) {
+                $token = $this->jwt->fromUser($user);
+                $this->setToken($token);
+
+                return $token;
+            }
+
+            return true;
         }
 
         return false;
@@ -115,12 +129,9 @@ class JWTGuard
     /**
      * {@inheritdoc}
      */
-    public function login(AuthenticatorInterface $user, bool $remeber = false)
+    public function login(AuthenticatorInterface $user, bool $remeber = false): void
     {
-        $token = $this->jwt->fromUser($user);
-        $this->setToken($token)->setUser($user);
-
-        return $token;
+        $this->setUser($user);
     }
 
     /**
@@ -176,9 +187,9 @@ class JWTGuard
     public function loginById($userId, bool $remember = false)
     {
         if ($user = $this->provider->findById($userId)) {
-            $this->setUser($user);
+            $this->login($user, $remember);
 
-            return true;
+            return $user;
         }
 
         return false;

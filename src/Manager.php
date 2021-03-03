@@ -13,13 +13,13 @@
 namespace Fluent\JWTAuth;
 
 use Fluent\JWTAuth\Blacklist;
-use Fluent\JWTAuth\Contracts\Providers\JWT as JWTContract;
+use Fluent\JWTAuth\Contracts\Providers\JWTInterface;
 use Fluent\JWTAuth\Exceptions\JWTException;
 use Fluent\JWTAuth\Exceptions\TokenBlacklistedException;
 use Fluent\JWTAuth\Factory;
 use Fluent\JWTAuth\Payload;
-use Fluent\JWTAuth\Support\CustomClaims;
-use Fluent\JWTAuth\Support\RefreshFlow;
+use Fluent\JWTAuth\Support\CustomClaimsTrait;
+use Fluent\JWTAuth\Support\RefreshFlowTrait;
 use Fluent\JWTAuth\Token;
 
 use function array_merge;
@@ -28,13 +28,13 @@ use function collect;
 
 class Manager
 {
-    use CustomClaims;
-    use RefreshFlow;
+    use CustomClaimsTrait;
+    use RefreshFlowTrait;
 
     /**
      * The provider.
      *
-     * @var JWTContract
+     * @var JWTInterface
      */
     protected $provider;
 
@@ -69,7 +69,7 @@ class Manager
     /**
      * @return void
      */
-    public function __construct(JWTContract $provider, Blacklist $blacklist, Factory $payloadFactory)
+    public function __construct(JWTInterface $provider, Blacklist $blacklist, Factory $payloadFactory)
     {
         $this->provider       = $provider;
         $this->blacklist      = $blacklist;
@@ -100,9 +100,9 @@ class Manager
         $payloadArray = $this->provider->decode($token->get());
 
         $payload = $this->payloadFactory
-                        ->setRefreshFlow($this->refreshFlow)
-                        ->customClaims($payloadArray)
-                        ->make();
+            ->setRefreshFlow($this->refreshFlow)
+            ->customClaims($payloadArray)
+            ->make();
 
         if ($checkBlacklist && $this->blacklistEnabled && $this->blacklist->has($payload)) {
             throw new TokenBlacklistedException('The token has been blacklisted');

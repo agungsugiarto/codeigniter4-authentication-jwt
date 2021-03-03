@@ -13,7 +13,7 @@
 namespace Fluent\JWTAuth\Providers\JWT;
 
 use Exception;
-use Fluent\JWTAuth\Contracts\Providers\JWT;
+use Fluent\JWTAuth\Contracts\Providers\JWTInterface;
 use Fluent\JWTAuth\Exceptions\JWTException;
 use Fluent\JWTAuth\Exceptions\TokenInvalidException;
 use Lcobucci\JWT\Builder;
@@ -26,7 +26,7 @@ use Lcobucci\JWT\Signer\Ecdsa\Sha512 as ES512;
 use Lcobucci\JWT\Signer\Hmac\Sha256 as HS256;
 use Lcobucci\JWT\Signer\Hmac\Sha384 as HS384;
 use Lcobucci\JWT\Signer\Hmac\Sha512 as HS512;
-use Lcobucci\JWT\Signer\Keychain;
+use Lcobucci\JWT\Signer\Key;
 use Lcobucci\JWT\Signer\Rsa;
 use Lcobucci\JWT\Signer\Rsa\Sha256 as RS256;
 use Lcobucci\JWT\Signer\Rsa\Sha384 as RS384;
@@ -37,7 +37,7 @@ use Tightenco\Collect\Support\Collection;
 use function array_key_exists;
 use function is_object;
 
-class Lcobucci extends Provider implements JWT
+class Lcobucci extends Provider implements JWTInterface
 {
     /**
      * The Builder instance.
@@ -101,19 +101,15 @@ class Lcobucci extends Provider implements JWT
      */
     public function encode(array $payload)
     {
-        // Remove the signature on the builder instance first.
-        $this->builder->unsign();
-
         try {
             foreach ($payload as $key => $value) {
-                $this->builder->set($key, $value);
+                $this->builder->withClaim($key, $value);
             }
-            $this->builder->sign($this->signer, $this->getSigningKey());
+
+            return $this->builder->getToken($this->signer, $this->getSigningKey())->__toString();
         } catch (Exception $e) {
             throw new JWTException('Could not create token: ' . $e->getMessage(), $e->getCode(), $e);
         }
-
-        return (string) $this->builder->getToken();
     }
 
     /**
@@ -170,9 +166,9 @@ class Lcobucci extends Provider implements JWT
      */
     protected function getSigningKey()
     {
-        return $this->isAsymmetric() ?
-            (new Keychain())->getPrivateKey($this->getPrivateKey(), $this->getPassphrase()) :
-            $this->getSecret();
+        return $this->isAsymmetric()
+            ? new Key($this->getPrivateKey(), $this->getPassphrase())
+            : new Key($this->getSecret());
     }
 
     /**
@@ -180,8 +176,8 @@ class Lcobucci extends Provider implements JWT
      */
     protected function getVerificationKey()
     {
-        return $this->isAsymmetric() ?
-            (new Keychain())->getPublicKey($this->getPublicKey()) :
-            $this->getSecret();
+        return $this->isAsymmetric()
+            ? new Key($this->getPublicKey())
+            : new Key($this->getSecret());
     }
 }

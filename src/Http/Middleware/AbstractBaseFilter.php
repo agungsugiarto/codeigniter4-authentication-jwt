@@ -13,19 +13,19 @@
 namespace Fluent\JWTAuth\Http\Middleware;
 
 use CodeIgniter\Http\Request;
+use CodeIgniter\HTTP\Response;
+use CodeIgniter\HTTP\ResponseInterface;
+use Fluent\Auth\Exceptions\AuthenticationException;
+use Fluent\Auth\Facades\Auth;
 use Fluent\JWTAuth\Exceptions\JWTException;
-use Fluent\JWTAuth\JWTAuth;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Response;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
+use Fluent\JWTAuth\JWTGuard;
 
-abstract class BaseMiddleware
+abstract class AbstractBaseFilter
 {
     /**
      * The JWT Authenticator.
      *
-     * @var JWTAuth
+     * @var JWTGuard
      */
     protected $auth;
 
@@ -34,9 +34,9 @@ abstract class BaseMiddleware
      *
      * @return void
      */
-    public function __construct(JWTAuth $auth)
+    public function __construct()
     {
-        $this->auth = $auth;
+        $this->auth = Auth::guard('api');
     }
 
     /**
@@ -48,7 +48,7 @@ abstract class BaseMiddleware
     public function checkForToken(Request $request)
     {
         if (! $this->auth->parser()->setRequest($request)->hasToken()) {
-            throw new UnauthorizedHttpException('jwt-auth', 'Token not provided');
+            throw new AuthenticationException('Token not provided');
         }
     }
 
@@ -63,26 +63,24 @@ abstract class BaseMiddleware
         $this->checkForToken($request);
 
         try {
-            if (! $this->auth->parseToken()->authenticate()) {
-                throw new UnauthorizedHttpException('jwt-auth', 'User not found');
+            if (! $this->auth->check()) {
+                throw new AuthenticationException('User not found');
             }
         } catch (JWTException $e) {
-            throw new UnauthorizedHttpException('jwt-auth', $e->getMessage(), $e, $e->getCode());
+            throw new AuthenticationException($e->getMessage(), [], $e->getCode());
         }
     }
 
     /**
      * Set the authentication header.
      *
-     * @param Response|JsonResponse $response
-     * @param  string|null  $token
-     * @return Response|JsonResponse
+     * @param  string|null $token
+     * @return ResponseInterface
      */
-    protected function setAuthenticationHeader($response, $token = null)
+    protected function setAuthenticationHeader(Response $response, $token = null)
     {
         $token = $token ?: $this->auth->refresh();
-        $response->headers->set('Authorization', 'Bearer ' . $token);
 
-        return $response;
+        return $response->setHeader('Authorization', 'Bearer ' . $token);
     }
 }

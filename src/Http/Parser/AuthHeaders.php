@@ -13,11 +13,11 @@
 namespace Fluent\JWTAuth\Http\Parser;
 
 use CodeIgniter\Http\Request;
-use Fluent\JWTAuth\Contracts\Http\Parser as ParserContract;
+use Fluent\JWTAuth\Contracts\Http\ParserInterface;
 
 use function preg_match;
 
-class AuthHeaders implements ParserContract
+class AuthHeaders implements ParserInterface
 {
     /**
      * The header name.

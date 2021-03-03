@@ -12,7 +12,7 @@
 
 namespace Fluent\JWTAuth\Claims;
 
-use Fluent\JWTAuth\Contracts\Claim as ClaimContract;
+use Fluent\JWTAuth\Contracts\ClaimInterface;
 use Fluent\JWTAuth\Exceptions\InvalidClaimException;
 use JsonSerializable;
 use Tightenco\Collect\Contracts\Support\Arrayable;
@@ -22,7 +22,7 @@ use function json_encode;
 
 use const JSON_UNESCAPED_SLASHES;
 
-abstract class Claim implements Arrayable, ClaimContract, Jsonable, JsonSerializable
+abstract class Claim implements Arrayable, ClaimInterface, Jsonable, JsonSerializable
 {
     /**
      * The claim name.

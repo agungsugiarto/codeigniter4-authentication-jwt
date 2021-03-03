@@ -20,7 +20,7 @@ use Fluent\JWTAuth\Factory;
 use Fluent\JWTAuth\Http\Parser\Parser;
 use Fluent\JWTAuth\Manager;
 use Fluent\JWTAuth\Payload;
-use Fluent\JWTAuth\Support\CustomClaims;
+use Fluent\JWTAuth\Support\CustomClaimsTrait;
 use Fluent\JWTAuth\Token;
 
 use function array_merge;
@@ -32,7 +32,7 @@ use function sha1;
 
 class JWT
 {
-    use CustomClaims;
+    use CustomClaimsTrait;
 
     /**
      * The authentication manager.
@@ -107,8 +107,8 @@ class JWT
         $this->requireToken();
 
         return $this->manager->customClaims($this->getCustomClaims())
-                             ->refresh($this->token, $forceForever, $resetClaims)
-                             ->get();
+            ->refresh($this->token, $forceForever, $resetClaims)
+            ->get();
     }
 
     /**

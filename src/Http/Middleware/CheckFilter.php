@@ -12,27 +12,32 @@
 
 namespace Fluent\JWTAuth\Http\Middleware;
 
-use Closure;
-use CodeIgniter\Http\Request;
+use CodeIgniter\Filters\FilterInterface;
+use CodeIgniter\HTTP\RequestInterface;
+use CodeIgniter\HTTP\ResponseInterface;
 use Exception;
 
-class Check extends BaseMiddleware
+class CheckFilter extends AbstractBaseFilter implements FilterInterface
 {
     /**
-     * Handle an incoming request.
-     *
-     * @param Request $request
-     * @return mixed
+     * {@inheritdoc}
      */
-    public function handle($request, Closure $next)
+    public function before(RequestInterface $request, $arguments = null)
     {
         if ($this->auth->parser()->setRequest($request)->hasToken()) {
             try {
-                $this->auth->parseToken()->authenticate();
+                $this->auth->check();
             } catch (Exception $e) {
             }
         }
 
-        return $next($request);
+        return $request;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function after(RequestInterface $request, ResponseInterface $response, $arguments = null)
+    {
     }
 }

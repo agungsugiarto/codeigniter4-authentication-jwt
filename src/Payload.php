@@ -47,7 +47,7 @@ class Payload implements ArrayAccess, Arrayable, Countable, Jsonable, JsonSerial
     /**
      * Build the Payload.
      *
-     * @param  bool  $refreshFlow
+     * @param  bool  $fefreshFlow
      * @return void
      */
     public function __construct(Collection $claims, PayloadValidator $validator, $refreshFlow = false)

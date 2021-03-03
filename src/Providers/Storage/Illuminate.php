@@ -14,23 +14,15 @@ namespace Fluent\JWTAuth\Providers\Storage;
 
 use CodeIgniter\Cache\CacheInterface;
 use Fluent\JWTAuth\Contracts\Providers\Storage;
-use Illuminate\Contracts\Cache\Repository;
 
 class Illuminate implements Storage
 {
     /**
      * The cache repository contract.
      *
-     * @var Repository
+     * @var CacheInterface
      */
     protected $cache;
-
-    /**
-     * The used cache tag.
-     *
-     * @var string
-     */
-    protected $tag = 'Fluent.jwt';
 
     /**
      * @return void
@@ -50,7 +42,7 @@ class Illuminate implements Storage
      */
     public function add($key, $value, $minutes)
     {
-        $this->cache()->save($key, $value, $minutes);
+        $this->cache->save($key, $value, $minutes);
     }
 
     /**
@@ -62,7 +54,7 @@ class Illuminate implements Storage
      */
     public function forever($key, $value)
     {
-        $this->cache()->save($key, $value, 0);
+        $this->cache->save($key, $value, 0);
     }
 
     /**
@@ -73,7 +65,7 @@ class Illuminate implements Storage
      */
     public function get($key)
     {
-        return $this->cache()->get($key);
+        return $this->cache->get($key);
     }
 
     /**
@@ -84,7 +76,7 @@ class Illuminate implements Storage
      */
     public function destroy($key)
     {
-        return $this->cache()->delete($key);
+        return $this->cache->delete($key);
     }
 
     /**
@@ -94,16 +86,6 @@ class Illuminate implements Storage
      */
     public function flush()
     {
-        $this->cache()->clean();
-    }
-
-    /**
-     * Return the cache instance with tags attached.
-     *
-     * @return CacheInterface
-     */
-    protected function cache()
-    {
-        return $this->cache;
+        $this->cache->clean();
     }
 }

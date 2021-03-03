@@ -16,16 +16,16 @@ use Fluent\JWTAuth\Claims\Claim;
 use Fluent\JWTAuth\Claims\Collection;
 use Fluent\JWTAuth\Claims\Factory as ClaimFactory;
 use Fluent\JWTAuth\Payload;
-use Fluent\JWTAuth\Support\CustomClaims;
-use Fluent\JWTAuth\Support\RefreshFlow;
+use Fluent\JWTAuth\Support\CustomClaimsTrait;
+use Fluent\JWTAuth\Support\RefreshFlowTrait;
 use Fluent\JWTAuth\Validators\PayloadValidator;
 
 use function array_search;
 
 class Factory
 {
-    use CustomClaims;
-    use RefreshFlow;
+    use CustomClaimsTrait;
+    use RefreshFlowTrait;
 
     /**
      * The claim factory.

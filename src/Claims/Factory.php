@@ -14,7 +14,7 @@ namespace Fluent\JWTAuth\Claims;
 
 use CodeIgniter\Http\Request;
 use Fluent\JWTAuth\Claims\Claim;
-use Fluent\JWTAuth\Support\Utils;
+use Fluent\JWTAuth\Support\UtilsTrait;
 
 use function array_key_exists;
 use function bin2hex;
@@ -126,7 +126,7 @@ class Factory
      */
     public function iat()
     {
-        return Utils::now()->getTimestamp();
+        return UtilsTrait::now()->getTimestamp();
     }
 
     /**
@@ -136,7 +136,7 @@ class Factory
      */
     public function exp()
     {
-        return Utils::now()->addMinutes($this->ttl)->getTimestamp();
+        return UtilsTrait::now()->addMinutes($this->ttl)->getTimestamp();
     }
 
     /**
@@ -146,7 +146,7 @@ class Factory
      */
     public function nbf()
     {
-        return Utils::now()->getTimestamp();
+        return UtilsTrait::now()->getTimestamp();
     }
 
     /**

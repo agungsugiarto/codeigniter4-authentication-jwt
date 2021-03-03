@@ -14,9 +14,9 @@ namespace Fluent\JWTAuth\Http\Parser;
 
 use CodeIgniter\Config\Services;
 use CodeIgniter\Http\Request;
-use Fluent\JWTAuth\Contracts\Http\Parser as ParserContract;
+use Fluent\JWTAuth\Contracts\Http\ParserInterface;
 
-class Cookies implements ParserContract
+class Cookies implements ParserInterface
 {
     use KeyTrait;
 

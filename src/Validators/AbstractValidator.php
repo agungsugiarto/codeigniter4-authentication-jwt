@@ -12,13 +12,13 @@
 
 namespace Fluent\JWTAuth\Validators;
 
-use Fluent\JWTAuth\Contracts\Validator as ValidatorContract;
+use Fluent\JWTAuth\Contracts\ValidatorInterface;
 use Fluent\JWTAuth\Exceptions\JWTException;
-use Fluent\JWTAuth\Support\RefreshFlow;
+use Fluent\JWTAuth\Support\RefreshFlowTrait;
 
-abstract class Validator implements ValidatorContract
+abstract class AbstractValidator implements ValidatorInterface
 {
-    use RefreshFlow;
+    use RefreshFlowTrait;
 
     /**
      * Helper function to return a boolean.

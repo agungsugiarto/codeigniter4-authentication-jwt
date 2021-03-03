@@ -14,7 +14,7 @@ namespace Fluent\JWTAuth\Contracts;
 
 use Fluent\JWTAuth\Exceptions\InvalidClaimException;
 
-interface Claim
+interface ClaimInterface
 {
     /**
      * Set the claim value, and call a validate method.

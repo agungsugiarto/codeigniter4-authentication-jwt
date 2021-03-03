@@ -13,9 +13,9 @@
 namespace Fluent\JWTAuth\Http\Parser;
 
 use CodeIgniter\Http\Request;
-use Fluent\JWTAuth\Contracts\Http\Parser as ParserContract;
+use Fluent\JWTAuth\Contracts\Http\ParserInterface;
 
-class QueryString implements ParserContract
+class QueryString implements ParserInterface
 {
     use KeyTrait;
 

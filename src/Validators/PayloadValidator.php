@@ -16,7 +16,7 @@ use Fluent\JWTAuth\Claims\Collection;
 use Fluent\JWTAuth\Exceptions\TokenExpiredException;
 use Fluent\JWTAuth\Exceptions\TokenInvalidException;
 
-class PayloadValidator extends Validator
+class PayloadValidator extends AbstractValidator
 {
     /**
      * The required claims.

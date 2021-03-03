@@ -15,7 +15,7 @@ namespace Fluent\JWTAuth\Claims;
 use DateInterval;
 use DateTimeInterface;
 use Fluent\JWTAuth\Exceptions\InvalidClaimException;
-use Fluent\JWTAuth\Support\Utils;
+use Fluent\JWTAuth\Support\UtilsTrait;
 
 use function is_numeric;
 
@@ -38,7 +38,7 @@ trait DatetimeTrait
     public function setValue($value)
     {
         if ($value instanceof DateInterval) {
-            $value = Utils::now()->add($value);
+            $value = UtilsTrait::now()->add($value);
         }
 
         if ($value instanceof DateTimeInterface) {
@@ -68,7 +68,7 @@ trait DatetimeTrait
      */
     protected function isFuture($value)
     {
-        return Utils::isFuture($value, $this->leeway);
+        return UtilsTrait::isFuture($value, $this->leeway);
     }
 
     /**
@@ -79,7 +79,7 @@ trait DatetimeTrait
      */
     protected function isPast($value)
     {
-        return Utils::isPast($value, $this->leeway);
+        return UtilsTrait::isPast($value, $this->leeway);
     }
 
     /**
