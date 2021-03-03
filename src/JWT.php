@@ -15,9 +15,10 @@ namespace Fluent\JWTAuth;
 use BadMethodCallException;
 use CodeIgniter\Http\Request;
 use Fluent\JWTAuth\Blacklist;
+use Fluent\JWTAuth\Contracts\JWTSubjectInterface;
 use Fluent\JWTAuth\Exceptions\JWTException;
 use Fluent\JWTAuth\Factory;
-use Fluent\JWTAuth\Http\Parser\Parser;
+use Fluent\JWTAuth\Http\Parser\HttpParser;
 use Fluent\JWTAuth\Manager;
 use Fluent\JWTAuth\Payload;
 use Fluent\JWTAuth\Support\CustomClaimsTrait;
@@ -44,7 +45,7 @@ class JWT
     /**
      * The HTTP parser.
      *
-     * @var Parser
+     * @var HttpParser
      */
     protected $parser;
 
@@ -65,7 +66,7 @@ class JWT
     /**
      * @return void
      */
-    public function __construct(Manager $manager, Parser $parser)
+    public function __construct(Manager $manager, HttpParser $parser)
     {
         $this->manager = $manager;
         $this->parser  = $parser;
@@ -74,7 +75,7 @@ class JWT
     /**
      * Generate a token for a given subject.
      *
-     * @param JWTSubject $subject
+     * @param JWTSubjectInterface $subject
      * @return string
      */
     public function fromSubject($subject)
@@ -87,7 +88,7 @@ class JWT
     /**
      * Alias to generate a token for a given user.
      *
-     * @param JWTSubject $user
+     * @param JWTSubjectInterface $user
      * @return string
      */
     public function fromUser($user)
@@ -224,7 +225,7 @@ class JWT
     /**
      * Create a Payload instance.
      *
-     * @param JWTSubject $subject
+     * @param JWTSubjectInterface $subject
      * @return Payload
      */
     public function makePayload($subject)
@@ -235,14 +236,14 @@ class JWT
     /**
      * Build the claims array and return it.
      *
-     * @param JWTSubject $subject
+     * @param JWTSubjectInterface $subject
      * @return array
      */
     protected function getClaimsArray($subject)
     {
         return array_merge(
             $this->getClaimsForSubject($subject),
-            $subject->getJWTCustomClaims(), // custom claims from JWTSubject method
+            $subject->getJWTCustomClaims(), // custom claims from JWTSubjectInterface method
             $this->customClaims // custom claims from inline setter
         );
     }
@@ -250,7 +251,7 @@ class JWT
     /**
      * Get the claims associated with a given subject.
      *
-     * @param JWTSubject $subject
+     * @param JWTSubjectInterface $subject
      * @return array
      */
     protected function getClaimsForSubject($subject)
@@ -362,7 +363,7 @@ class JWT
     /**
      * Get the Parser instance.
      *
-     * @return Parser
+     * @return HttpParser
      */
     public function parser()
     {

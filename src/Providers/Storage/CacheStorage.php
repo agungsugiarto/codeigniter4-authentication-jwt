@@ -13,9 +13,9 @@
 namespace Fluent\JWTAuth\Providers\Storage;
 
 use CodeIgniter\Cache\CacheInterface;
-use Fluent\JWTAuth\Contracts\Providers\Storage;
+use Fluent\JWTAuth\Contracts\Providers\StorageInterface;
 
-class Illuminate implements Storage
+class CacheStorage implements StorageInterface
 {
     /**
      * The cache repository contract.

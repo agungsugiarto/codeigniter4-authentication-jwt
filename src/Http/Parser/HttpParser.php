@@ -14,7 +14,7 @@ namespace Fluent\JWTAuth\Http\Parser;
 
 use CodeIgniter\Http\Request;
 
-class Parser
+class HttpParser
 {
     /**
      * The chain.

@@ -79,9 +79,9 @@ class Factory
         if ($this->has($name)) {
             $claim = new $this->classMap[$name]($value);
 
-            return method_exists($claim, 'setLeeway') ?
-                $claim->setLeeway($this->leeway) :
-                $claim;
+            return method_exists($claim, 'setLeeway')
+                ? $claim->setLeeway($this->leeway)
+                : $claim;
         }
 
         return new Custom($name, $value);

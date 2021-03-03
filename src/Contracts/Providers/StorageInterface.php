@@ -12,7 +12,7 @@
 
 namespace Fluent\JWTAuth\Contracts\Providers;
 
-interface Storage
+interface StorageInterface
 {
     /**
      * @param  string  $key

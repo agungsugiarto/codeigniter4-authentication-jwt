@@ -12,13 +12,13 @@ use Fluent\JWTAuth\Factory;
 use Fluent\JWTAuth\Http\Parser\AuthHeaders;
 use Fluent\JWTAuth\Http\Parser\Cookies;
 use Fluent\JWTAuth\Http\Parser\InputSource;
-use Fluent\JWTAuth\Http\Parser\Parser as HttpParser;
+use Fluent\JWTAuth\Http\Parser\HttpParser;
 use Fluent\JWTAuth\Http\Parser\QueryString;
 use Fluent\JWTAuth\JWT;
 use Fluent\JWTAuth\JWTGuard;
 use Fluent\JWTAuth\Manager;
 use Fluent\JWTAuth\Providers\JWT\Lcobucci;
-use Fluent\JWTAuth\Providers\Storage\Illuminate;
+use Fluent\JWTAuth\Providers\Storage\CacheStorage;
 use Fluent\JWTAuth\Validators\PayloadValidator;
 use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Parser;
@@ -41,7 +41,7 @@ class JWTAuthServiceProvider extends AbstractServiceProvider
                             static::config('algo'),
                             static::config('keys')
                         ),
-                        (new Blacklist(new Illuminate(Services::cache())))
+                        (new Blacklist(new CacheStorage(Services::cache())))
                             ->setGracePeriod(static::config('blacklist_grace_period'))
                             ->setRefreshTTL(static::config('refresh_ttl')),
                         new Factory(
