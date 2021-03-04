@@ -13,6 +13,7 @@
 namespace Fluent\JWTAuth;
 
 use BadMethodCallException;
+use CodeIgniter\Events\Events;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\Http\RequestInterfaceInterface;
 use Exception;
@@ -72,8 +73,12 @@ class JWTGuard implements AuthenticationInterface
             $this->jwt->setRequest($this->request)->getToken() &&
             ($payload = $this->jwt->check(true))
         ) {
-            return $this->user = $this->provider->findById($payload['sub']);
+            $this->user = $this->provider->findById($payload['sub']);
+
+            Events::trigger('fireLoginEvent', $this->user, true);
         }
+
+        return $this->user;
     }
 
     /**
@@ -106,22 +111,17 @@ class JWTGuard implements AuthenticationInterface
      */
     public function attempt(array $credentials, bool $remember = true)
     {
+        Events::trigger('fireAttemptEvent', $credentials, $remember);
+
         $this->lastAttempted = $user = $this->provider->findByCredentials($credentials);
 
         if ($this->hasValidCredentials($user, $credentials)) {
-            $this->login($user, $remember);
-
-            // We can return JWT if pass second argument to true
-            // otherwise will return boolean.
-            if ($remember) {
-                $token = $this->jwt->fromUser($user);
-                $this->setToken($token);
-
-                return $token;
-            }
-
-            return true;
+            // We can return JWT token if pass second argument set to true,
+            // otherwise will be return bool.
+            return $this->login($user, $remember);
         }
+
+        Events::trigger('fireFailedEvent', $user, $credentials);
 
         return false;
     }
@@ -129,9 +129,18 @@ class JWTGuard implements AuthenticationInterface
     /**
      * {@inheritdoc}
      */
-    public function login(AuthenticatorInterface $user, bool $remeber = false): void
+    public function login(AuthenticatorInterface $user, bool $remember = true)
     {
-        $this->setUser($user);
+        $token = $this->jwt->fromUser($user);
+
+        $this->setToken($token)->setUser($user);
+
+        Events::trigger('fireLoginEvent', $user, $remember);
+
+        // Provide codeigniter4/authentitication-implementation
+        Events::trigger('login', $user, $remember);
+
+        return $remember ? $token : true;
     }
 
     /**
@@ -140,6 +149,11 @@ class JWTGuard implements AuthenticationInterface
     public function logout($forceForever = false)
     {
         $this->requireToken()->invalidate($forceForever);
+
+        Events::trigger('fireLogoutEvent', $this->user);
+
+        // Provide codeigniter4/authentitication-implementation
+        Events::trigger('logout', $this->user);
 
         $this->user = null;
         $this->jwt->unsetToken();
@@ -323,7 +337,13 @@ class JWTGuard implements AuthenticationInterface
      */
     protected function hasValidCredentials($user, $credentials)
     {
-        return $user !== null && $this->provider->validateCredentials($user, $credentials);
+        $validated = $user !== null && $this->provider->validateCredentials($user, $credentials);
+
+        if ($validated) {
+            Events::trigger('fireValidatedEvent', $user);
+        }
+
+        return $validated;
     }
 
     /**
