@@ -46,7 +46,7 @@ class Services extends BaseService
      *
      * @return Manager
      */
-    protected static function manager(bool $getShared = true)
+    public static function manager(bool $getShared = true)
     {
         if ($getShared) {
             return static::getSharedInstance('manager');
@@ -135,7 +135,7 @@ class Services extends BaseService
                 new AuthHeaders(),
                 new Cookies(),
                 new InputSource(),
-                new QueryString(static::config('decrypt_cookies')),
+                new QueryString(),
             ]
         );
     }

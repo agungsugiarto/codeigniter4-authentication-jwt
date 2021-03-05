@@ -133,7 +133,7 @@ class JWT extends BaseConfig
      *
      * Specify the hashing algorithm that will be used to sign the token.
      *
-     * See here: https://github.com/namshi/jose/tree/master/src/Namshi/JOSE/Signer/OpenSSL
+     * @see https://github.com/agungsugiarto/codeigniter4-authentication-jwt/blob/da2f8ad6429bb6ddc4e965cdc47953412044774d/src/Providers/JWT/Lcobucci.php#L83-L93
      * for possible values.
      *
      * @var string
@@ -240,22 +240,4 @@ class JWT extends BaseConfig
      * @var int
      */
     public $blacklist_grace_period = 0;
-
-    /**
-     * --------------------------------------------------------------------------
-     * Cookies encryption
-     * --------------------------------------------------------------------------
-     *
-     * By default Laravel encrypt cookies for security reason.
-     * If you decide to not decrypt cookies, you will have to configure Laravel
-     * to not encrypt your cookie token by adding its name into the $except
-     * array available in the middleware "EncryptCookies" provided by Laravel.
-     * see https://laravel.com/docs/master/responses#cookies-and-encryption
-     * for details.
-     *
-     * Set it to true if you want to decrypt cookies.
-     *
-     * @var bool
-     */
-    public $decrypt_cookies = false;
 }

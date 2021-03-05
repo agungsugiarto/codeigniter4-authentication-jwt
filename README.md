@@ -1,6 +1,5 @@
 # CodeIgniter4 Authentication JWT
 
-[![tests](https://github.com/agungsugiarto/codeigniter4-authentication-jwt/actions/workflows/php.yml/badge.svg)](https://github.com/agungsugiarto/codeigniter4-authentication-jwt/actions/workflows/php.yml)
 [![Latest Stable Version](https://poser.pugx.org/agungsugiarto/codeigniter4-authentication-jwt/v)](https://github.com/agungsugiarto/codeigniter4-authentication-jwt/releases)
 [![Total Downloads](https://poser.pugx.org/agungsugiarto/codeigniter4-authentication-jwt/downloads)](https://packagist.org/packages/agungsugiarto/codeigniter4-authentication-jwt/stats)
 [![Latest Unstable Version](https://poser.pugx.org/agungsugiarto/codeigniter4-authentication-jwt/v/unstable)](https://packagist.org/packages/agungsugiarto/codeigniter4-authentication-jwt)

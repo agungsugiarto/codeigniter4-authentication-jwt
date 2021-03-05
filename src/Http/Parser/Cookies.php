@@ -12,7 +12,6 @@
 
 namespace Fluent\JWTAuth\Http\Parser;
 
-use CodeIgniter\Config\Services;
 use CodeIgniter\Http\Request;
 use Fluent\JWTAuth\Contracts\Http\ParserInterface;
 
@@ -21,28 +20,12 @@ class Cookies implements ParserInterface
     use KeyTrait;
 
     /**
-     * Decrypt or not the cookie while parsing.
-     *
-     * @var bool
-     */
-    private $decrypt;
-
-    public function __construct($decrypt = false)
-    {
-        $this->decrypt = $decrypt;
-    }
-
-    /**
      * Try to parse the token from the request cookies.
      *
      * @return null|string
      */
     public function parse(Request $request)
     {
-        if ($this->decrypt && $request->fetchGlobal('cookie', $this->key)) {
-            return Services::encrypter()->decrypt($request->fetchGlobal('cookie', $this->key));
-        }
-
         return $request->fetchGlobal('cookie', $this->key);
     }
 }

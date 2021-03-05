@@ -196,6 +196,42 @@ class JWTGuard implements AuthenticationInterface
     }
 
     /**
+     * Log a user into the application using their credentials.
+     *
+     * @param  array  $credentials
+     *
+     * @return bool
+     */
+    public function once(array $credentials = [])
+    {
+        if ($this->validate($credentials)) {
+            $this->setUser($this->lastAttempted);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Log the given User into the application.
+     *
+     * @param  mixed  $id
+     *
+     * @return bool
+     */
+    public function onceUsingId($id)
+    {
+        if ($user = $this->provider->findById($id)) {
+            $this->setUser($user);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function loginById($userId, bool $remember = false)
