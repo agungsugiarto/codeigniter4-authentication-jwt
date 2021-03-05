@@ -15,7 +15,6 @@ namespace Fluent\JWTAuth;
 use BadMethodCallException;
 use CodeIgniter\Events\Events;
 use CodeIgniter\HTTP\RequestInterface;
-use CodeIgniter\Http\RequestInterfaceInterface;
 use Exception;
 use Fluent\Auth\Contracts\AuthenticationInterface;
 use Fluent\Auth\Contracts\AuthenticatorInterface;
@@ -50,14 +49,13 @@ class JWTGuard implements AuthenticationInterface
     /**
      * Instantiate the class.
      *
-     * @param RequestInterfaceInterface $request
      * @return void
      */
-    public function __construct(JWT $jwt, UserProviderInterface $provider, RequestInterface $request)
+    public function __construct(JWT $jwt, RequestInterface $request, UserProviderInterface $provider)
     {
         $this->jwt      = $jwt;
-        $this->provider = $provider;
         $this->request  = $request;
+        $this->provider = $provider;
     }
 
     /**
@@ -199,7 +197,6 @@ class JWTGuard implements AuthenticationInterface
      * Log a user into the application using their credentials.
      *
      * @param  array  $credentials
-     *
      * @return bool
      */
     public function once(array $credentials = [])
@@ -217,7 +214,6 @@ class JWTGuard implements AuthenticationInterface
      * Log the given User into the application.
      *
      * @param  mixed  $id
-     *
      * @return bool
      */
     public function onceUsingId($id)
