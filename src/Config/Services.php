@@ -3,7 +3,7 @@
 namespace Fluent\JWTAuth\Config;
 
 use CodeIgniter\Config\Factories;
-use CodeIgniter\Config\Services as BaseService;
+use CodeIgniter\Config\BaseService;
 use Fluent\JWTAuth\Blacklist;
 use Fluent\JWTAuth\Claims\Factory as ClaimsFactory;
 use Fluent\JWTAuth\Contracts\Providers\JWTInterface;
@@ -35,8 +35,8 @@ class Services extends BaseService
         }
 
         return (new JWT(
-            static::manager(),
-            static::httpparser()
+            static::getSharedInstance('manager'),
+            static::getSharedInstance('httpparser')
         ))
         ->lockSubject(static::config('lock_subject'));
     }
@@ -53,9 +53,9 @@ class Services extends BaseService
         }
 
         return (new Manager(
-            static::lcobuccy(),
-            static::blacklist(),
-            static::factory()
+            static::getSharedInstance('lcobuccy'),
+            static::getSharedInstance('blacklist'),
+            static::getSharedInstance('factory')
         ))
         ->setBlacklistEnabled(static::config('blacklist_enabled'))
         ->setPersistentClaims(static::config('persistent_claims'));
@@ -109,7 +109,7 @@ class Services extends BaseService
         }
 
         return new Factory(
-            (new ClaimsFactory(static::request()))
+            (new ClaimsFactory(static::getSharedInstance('request')))
                 ->setTTL(static::config('ttl'))
                 ->setLeeway(static::config('leeway')),
             (new PayloadValidator())
@@ -130,7 +130,7 @@ class Services extends BaseService
         }
 
         return new HttpParser(
-            static::request(),
+            static::getSharedInstance('request'),
             [
                 new AuthHeaders(),
                 new Cookies(),
