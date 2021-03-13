@@ -92,7 +92,7 @@ class Services extends BaseService
             return static::getSharedInstance('blacklist');
         }
 
-        return (new Blacklist(new CacheStorage(static::cache())))
+        return (new Blacklist(new CacheStorage(static::getSharedInstance('cache'))))
             ->setGracePeriod(static::config('blacklist_grace_period'))
             ->setRefreshTTL(static::config('refresh_ttl'));
     }
