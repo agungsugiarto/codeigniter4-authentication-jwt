@@ -48,7 +48,37 @@ class User extends Entity implements
 }
 ```
 
+### Adding `\Fluent\JWTAuth\JWTGuard::class` Guards
+
+We need to define `\Fluent\JWTAuth\JWTGuard::class` authentication guards using the `extend` method on the `Auth` facade or service. You should place your call to the `extend` method within a service provider. Since codeigniter4-authentication already ships with an AuthServiceProvider, we can place the code in that provider. Open `\App\Providers\AuthServiceProvider`:
+```php
+namespace App\Providers;
+
+use Fluent\Auth\AbstractServiceProvider;
+use Fluent\Auth\Facades\Auth;
+use Fluent\JWTAuth\Config\Services;
+use Fluent\JWTAuth\JWTGuard;
+
+class AuthServiceProvider extends AbstractServiceProvider
+{
+    /**
+     * {@inheritdoc}
+     */
+    public static function register()
+    {
+        Auth::extend(JWTGuard::class, function ($auth, $name, array $config) {
+            return new JWTGuard(
+                Services::getSharedInstance('jwt'),
+                Services::getSharedInstance('request'),
+                $auth->createUserProvider($config['provider']),
+            );
+        });
+    }
+}
+```
 ### Configure Auth guard
+
+Open `\App\Providers\AuthServiceProvider`:
 
 Inside the `app/Config/Auth.php` file you will need to make a few changes to configure codeigniter4-authentication to use the jwt guard to power your application authentication.
 
@@ -57,12 +87,18 @@ Make the following changes to the file:
 public $guards = [
     //..
     'api' => [
-        'driver' => 'jwt',
+        'driver' => \Fluent\JWTAuth\JWTGuard::class,
         'provider' => 'users',
     ],
 ];
 ```
-Here we are telling the api guard to use the jwt driver, and we are setting the api guard.
+
+Here we are telling the api guard to use the `\Fluent\JWTAuth\JWTGuard::class` driver, and we are setting the api guard.
+
+Next we need to register this `App\Providers\AuthServiceProvider` to lifecycle application. Open `App\Config\Events` add this line:
+```php
+Events::on('pre_system', [\App\Providers\AuthServiceProvider::class, 'register']);
+```
 
 We can now use codeigniter4-authentication built in Auth system, with codeigniter4-authentication-jwt doing the work behind the scenes!
 
