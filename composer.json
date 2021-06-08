@@ -24,7 +24,7 @@
         }
     ],
     "require": {
-        "agungsugiarto/codeigniter4-authentication": "^1.x-dev",
+        "agungsugiarto/codeigniter4-authentication": "^1.0",
         "codeigniter4/framework": "^4.1",
         "php": "^7.3|^8.0",
         "lcobucci/jwt": "<3.4",
