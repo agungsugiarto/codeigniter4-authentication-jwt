@@ -78,8 +78,6 @@ class AuthServiceProvider extends AbstractServiceProvider
 ```
 ### Configure Auth guard
 
-Open `\App\Providers\AuthServiceProvider`:
-
 Inside the `app/Config/Auth.php` file you will need to make a few changes to configure codeigniter4-authentication to use the jwt guard to power your application authentication.
 
 Make the following changes to the file:
