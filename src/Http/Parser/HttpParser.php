@@ -51,6 +51,20 @@ class HttpParser
     }
 
     /**
+     * Add a new parser to the chain.
+     *
+     * @param array|\Fluent\JWTAuth\Contracts\Http\ParserInterface $parsers
+     *
+     * @return $this
+     */
+    public function addParser($parsers)
+    {
+        $this->chain = array_merge($this->chain, is_array($parsers) ? $parsers : [$parsers]);
+
+        return $this;
+    }
+
+    /**
      * Set the order of the parser chain.
      *
      * @param  array  $chain
