@@ -143,6 +143,7 @@ abstract class Claim implements Arrayable, ClaimInterface, Jsonable, JsonSeriali
      *
      * @return array
      */
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return $this->toArray();
