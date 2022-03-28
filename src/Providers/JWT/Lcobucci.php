@@ -101,15 +101,19 @@ class Lcobucci extends Provider implements JWTInterface
      */
     public function encode(array $payload)
     {
+        // Remove the signature on the builder instance first.
+        $this->builder->unsign();
+
         try {
             foreach ($payload as $key => $value) {
-                $this->builder->withClaim($key, $value);
+                $this->builder->set($key, $value);
             }
-
-            return $this->builder->getToken($this->signer, $this->getSigningKey())->__toString();
+            $this->builder->sign($this->signer, $this->getSigningKey());
         } catch (Exception $e) {
-            throw new JWTException('Could not create token: ' . $e->getMessage(), $e->getCode(), $e);
+            throw new JWTException('Could not create token: '.$e->getMessage(), $e->getCode(), $e);
         }
+
+        return (string) $this->builder->getToken();
     }
 
     /**
