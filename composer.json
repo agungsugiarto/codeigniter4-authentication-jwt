@@ -24,7 +24,7 @@
         }
     ],
     "require": {
-        "agungsugiarto/codeigniter4-authentication": "^1.0",
+        "agungsugiarto/codeigniter4-authentication": "^1.0|^2.0",
         "codeigniter4/framework": "^4.1",
         "php": "^7.3|^8.0",
         "lcobucci/jwt": "<3.4",
@@ -61,5 +61,10 @@
         "cs-check": "phpcs",
         "cs-fix": "phpcbf",
         "test": "phpunit --color=always"
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
     }
 }
